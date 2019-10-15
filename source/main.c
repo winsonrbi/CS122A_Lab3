@@ -17,7 +17,69 @@
 #include "simAVRHeader.h"
 #endif
 
-unsigned char tempA = 0x00;
+unsigned char* patternSelect(unsigned char keypadInput){
+ 	keypadInput = GetKeypadKey();
+	if(keypadInput == 'A'){
+		return "Ptrn: 1";
+	}
+	else if(keypadInput == 'B'){
+		return "Ptrn: 2";
+	}
+	else if(keypadInput == 'C'){
+		return "Ptrn: 3";
+	}
+	else if(keypadInput == 'D'){
+		return "Ptrn: 4";
+	}
+	else{
+		return "Ptrn: Error";
+	}
+}
+
+unsigned char* speedSelect(unsigned char keypadInput){
+	if(keypadInput == '1'){
+		return "Spd: 1";
+	}
+	else if(keypadInput == '2'){
+		return "Spd: 2";
+	}
+	else if(keypadInput == '3'){
+		return "Spd: 3";
+	}
+	else if (keypadInput == '4'){
+		return "Spd: 4";
+	}
+	else{
+		return "Spd: 0";
+	}
+}
+
+unsigned char* slaveSelect(unsigned char keypadInput){
+	if(keypadInput == '7'){
+		return "uC: 1";
+	}
+	else if(keypadInput == '8'){
+		return "uC: 2";
+	}
+	else if(keypadInput == '9'){
+		return "uC: 3";
+	}
+	else{
+		return "uC: 0";
+	}
+}
+
+void CustomLCD_DisplayString( unsigned char column, const unsigned char* string) {//No Clear Screen                       
+   unsigned char c = column;                                                                          
+   while(*string) {
+      LCD_Cursor(c++);
+      LCD_WriteData(*string++);                                                                       
+   }                                                                                                  
+}   unsigned char tempA = 0x00;
+unsigned char* currentPattern = "Ptrn: 0";
+unsigned char* currentSpeed = "Spd: 0";
+unsigned char* currentSlave = "uC: 0";
+unsigned char keypadInput = 0x00;
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0xF0; PORTA = 0x0F;
@@ -27,11 +89,33 @@ int main(void) {
    
 	LCD_init();
 	LCD_ClearScreen();
-	LCD_DisplayString(1,"Test");
 	TimerOn();
 	TimerSet(100);
+	CustomLCD_DisplayString(1,currentPattern);
+	CustomLCD_DisplayString(10,currentSpeed);
+	CustomLCD_DisplayString(17,currentSlave);
     	while (1) {
+		
 		tempA = PINA;
+		keypadInput = GetKeypadKey();
+		if(keypadInput != '\0'){
+			//update screen and send signal
+			if(keypadInput == 'A' || keypadInput == 'B' || keypadInput  == 'C' || keypadInput == 'D'){
+				currentPattern = patternSelect(keypadInput);
+				CustomLCD_DisplayString(1,currentPattern);
+			}
+			else if(keypadInput == '1' || keypadInput == '2' || keypadInput == '3' || keypadInput == '4'){
+				currentSpeed = speedSelect(keypadInput);
+				CustomLCD_DisplayString(10,currentSpeed);
+			}
+			else if(keypadInput == '7' || keypadInput == '8' || keypadInput == '9'){
+				currentSlave = slaveSelect(keypadInput);
+				CustomLCD_DisplayString(17,currentSlave);
+			}
+			else{//invalid key don't update screen
+				break;
+			}
+		}
 		//LCD_Cursor(1);
 		//LCD_WriteData(GetKeypadKey());
 		while(!TimerFlag);

@@ -12,12 +12,12 @@ void SPI_MasterTransmit(unsigned char cData, unsigned char portSelect, unsigned 
 	//data in SPDR will be transmitted, e.g. SPDR = cData;
 	SPDR = cData;
 	//set SS low
-	bit_write(0,portSelect,BIT(slaveSelectPin));
+	SetBit(portSelect,slaveSelectPin,0);
 	while(!(SPSR & (1<<SPIF))){//wait for transmission to complete
 		;
 	}
 	//set SS high
-	bit_write(1,portSelect,BIT(slaveSelectPin));
+	SetBit(portSelect,slaveSelectPin,1);
 }
 
 void SPI_ServantInit(void){

@@ -12,6 +12,7 @@
 #include <../header/bit.h>
 #include <../header/io.c>
 #include <../header/keypad.h>
+#include <../header/SPI.c>
 
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
@@ -75,20 +76,25 @@ void CustomLCD_DisplayString( unsigned char column, const unsigned char* string)
       LCD_Cursor(c++);
       LCD_WriteData(*string++);                                                                       
    }                                                                                                  
-}   unsigned char tempA = 0x00;
+}   
+unsigned char tempA = 0x00;
 unsigned char* currentPattern = "Ptrn: 0";
 unsigned char* currentSpeed = "Spd: 0";
 unsigned char* currentSlave = "uC: 0";
 unsigned char keypadInput = 0x00;
+unsigned char cData = 0x00;
+unsigned int slave = 0;
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0xF0; PORTA = 0x0F;
+	DDRB = 0xFF; PORTB = 0x00; //SLAVE SELECT ON MASTER uC
 	DDRC = 0xFF; PORTC = 0x00; //OUTPUTS
 	DDRD = 0xFF; PORTD = 0x00; //OUTPUTS;
     /* Insert your solution below */
    
 	LCD_init();
 	LCD_ClearScreen();
+	SPI_MasterInit();
 	TimerOn();
 	TimerSet(100);
 	CustomLCD_DisplayString(1,currentPattern);
@@ -103,14 +109,29 @@ int main(void) {
 			if(keypadInput == 'A' || keypadInput == 'B' || keypadInput  == 'C' || keypadInput == 'D'){
 				currentPattern = patternSelect(keypadInput);
 				CustomLCD_DisplayString(1,currentPattern);
+				if(slave != 0){
+					SPI_MasterTransmit(keypadInput, PORTB, slave);			
+				}
 			}
 			else if(keypadInput == '1' || keypadInput == '2' || keypadInput == '3' || keypadInput == '4'){
 				currentSpeed = speedSelect(keypadInput);
 				CustomLCD_DisplayString(10,currentSpeed);
+				if(slave != 0){
+					SPI_MasterTransmit(keypadInput, PORTB, slave);
+				}
 			}
 			else if(keypadInput == '7' || keypadInput == '8' || keypadInput == '9'){
 				currentSlave = slaveSelect(keypadInput);
 				CustomLCD_DisplayString(17,currentSlave);
+				if(keypadInput == '7'){
+					slave = 1;
+				}
+				if(keypadInput == '8'){
+					slave = 2;
+				}
+				if(keypadInput == '9'){
+					slave = 3;
+				}
 			}
 			else{//invalid key don't update screen
 				break;

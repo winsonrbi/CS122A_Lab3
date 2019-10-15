@@ -87,7 +87,6 @@ unsigned int slave = 0;
 int main(void) {
     /* Insert DDR and PORT initializations */
 	DDRA = 0xF0; PORTA = 0x0F;
-	DDRB = 0xFF; PORTB = 0x00; //SLAVE SELECT ON MASTER uC
 	DDRC = 0xFF; PORTC = 0x00; //OUTPUTS
 	DDRD = 0xFF; PORTD = 0x00; //OUTPUTS;
     /* Insert your solution below */

@@ -1,5 +1,6 @@
 //MIGHT NEED THIS #include <avr/interrupt.h>
 #include "bit.h"
+unsigned char receivedData = 0x00;
 void SPI_MasterInit(void){
 	//SET DDRB to have MOSI, SCK, and SS as output and MISO as input
 	//SS:PB4 MOSI: PB5 MISO: PB6 SCK: PB7
@@ -32,6 +33,5 @@ void SPI_ServantInit(void){
 ISR(SPI_STC_vect){
 	//this is enabled in init with the SCPR register's "SPI Interrupt Enable"
 	//SPDR contains the received data, e.g. unsigned char receivedData = SPDR;
-	unsigned char receivedData = SPDR;
-	return receivedData;
+	receivedData = SPDR;
 }

@@ -1,4 +1,4 @@
-//MIGHT NEED THIS #include <avr/interrupt.h>
+#include <avr/interrupt.h>
 #include "bit.h"
 unsigned char receivedData = 0x00;
 void SPI_MasterInit(void){
@@ -13,12 +13,15 @@ void SPI_MasterTransmit(unsigned char cData, unsigned char portSelect, unsigned 
 	//data in SPDR will be transmitted, e.g. SPDR = cData;
 	SPDR = cData;
 	//set SS low
-	SetBit(portSelect,slaveSelectPin,0);
+	//SetBit(portSelect,slaveSelectPin,0);
+	PORTB &= ~(1 << PB1);
 	while(!(SPSR & (1<<SPIF))){//wait for transmission to complete
 		;
 	}
 	//set SS high
-	SetBit(portSelect ,slaveSelectPin,1);
+	//SetBit(portSelect ,slaveSelectPin,1);
+	PORTB |= (1 << PB1);
+	sei();
 }
 
 void SPI_ServantInit(void){

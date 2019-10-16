@@ -110,7 +110,7 @@ int main(void) {
 				CustomLCD_DisplayString(1,currentPattern);
 				if(slave != 0){
 					LCD_DisplayString(1,"Transmitting");
-					SPI_MasterTransmit(0xFF, PORTB, slave);
+					SPI_MasterTransmit(0xFF);
 					LCD_DisplayString(1,"Done");			
 				}
 			}
@@ -118,7 +118,7 @@ int main(void) {
 				currentSpeed = speedSelect(keypadInput);
 				CustomLCD_DisplayString(10,currentSpeed);
 				if(slave != 0){
-					SPI_MasterTransmit(0xFF, PORTB, slave);
+					SPI_MasterTransmit(0xFF);
 				}
 			}
 			else if(keypadInput == '7' || keypadInput == '8' || keypadInput == '9'){
@@ -138,6 +138,8 @@ int main(void) {
 				break;
 			}
 		}
+		PORTB = 0x01;
+		//PORTB |= (1 << PB1);
 		//LCD_Cursor(1);
 		//LCD_WriteData(GetKeypadKey());
 		while(!TimerFlag);

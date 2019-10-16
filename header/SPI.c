@@ -14,11 +14,14 @@ void SPI_MasterTransmit(unsigned char cData){
 	SPDR = cData;
 	//set SS low
 	//SetBit(portSelect,slaveSelectPin,0);
+	SetBit(PORTB,1,0);
+	PORTB &= ~(1 << PB1);
 	while(!(SPSR & (1<<SPIF))){//wait for transmission to complete
 		;
 	}
 	//set SS high
 	//SetBit(portSelect ,slaveSelectPin,1);
+	PORTB |= (1 << PB1);
 }
 
 void SPI_ServantInit(void){

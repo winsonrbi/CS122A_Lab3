@@ -33,7 +33,7 @@ unsigned char* patternSelect(unsigned char keypadInput){
 		return "Ptrn: 4";
 	}
 	else{
-		return "Ptrn: Error";
+		return "Ptrn: 0";
 	}
 }
 

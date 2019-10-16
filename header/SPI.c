@@ -18,12 +18,12 @@ void SPI_MasterTransmit(unsigned char cData, unsigned char portSelect, unsigned 
 		;
 	}
 	//set SS high
-	SetBit(portSelect,slaveSelectPin,1);
+	SetBit(portSelect ,slaveSelectPin,1);
 }
 
 void SPI_ServantInit(void){
 	//set DDR to have MISO line as output and MOSI, SCK, and SS as input
-	DDRB = 0x40; PORTB = 0x00;
+	DDRB = 0x40; PORTB = (1 << PB4);
 	//set SPCR register to enable SPI and enable SPI interrupt (pg. 168)
 	SPCR = (1<<SPE);
 	//Enable global interrupts are enabled on SREG register (pg.9)

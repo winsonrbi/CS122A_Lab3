@@ -138,8 +138,6 @@ int main(void) {
 				break;
 			}
 		}
-		PORTB = 0x01;
-		//PORTB |= (1 << PB1);
 		//LCD_Cursor(1);
 		//LCD_WriteData(GetKeypadKey());
 		while(!TimerFlag);

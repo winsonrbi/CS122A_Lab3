@@ -109,7 +109,9 @@ int main(void) {
 				currentPattern = patternSelect(keypadInput);
 				CustomLCD_DisplayString(1,currentPattern);
 				if(slave != 0){
-					SPI_MasterTransmit(keypadInput, PORTB, slave);			
+					LCD_DisplayString(1,"Transmitting");
+					SPI_MasterTransmit(keypadInput, PORTB, slave);
+					LCD_DisplayString(1,"Done");			
 				}
 			}
 			else if(keypadInput == '1' || keypadInput == '2' || keypadInput == '3' || keypadInput == '4'){
